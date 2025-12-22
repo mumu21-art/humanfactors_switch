@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>แบบฟอร์มสำรวจการใช้งานสวิตช์ไฟ</title>
+
+  <style>
+    :root{
+      /* ✅ Background: โทนฟ้าเขียวแบบเดิม */
+      --bg1:#74ebd5;   /* mint/teal */
+      --bg2:#9face6;   /* periwinkle */
+
+      --card:#ffffff;
+      --text:#111827;
+      --sub:#374151;
+      --muted:#6b7280;
+      --muted2:#9ca3af;
+
+      --border:#e5e7eb;
+      --shadow: 0 12px 30px rgba(17,24,39,.08);
+      --radius: 18px;
+
+      /* ✅ Header bar + Primary buttons: ตามภาพ (ม่วง -> ชมพู) */
+      --accent1:#a5b4fc; /* soft indigo */
+      --accent2:#c4b5fd; /* pastel purple */
+      --accent3:#f0abfc; /* pink-purple */
+      --accent4:#f9a8d4; /* pastel pink */
+
+      --danger:#ef4444;
+      --dangerBg:#fff1f2;
+
+      --focus: rgba(196,181,253,.32); /* โฟกัสโทนม่วงนุ่ม ๆ */
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+      /* ✅ background แบบเดิม */
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      color:var(--text);
+    }
+
+    .container{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 18px 44px;
+    }
+
+    .section{ display:none; }
+    .section.active{ display:block; }
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    /* ===== Header ===== */
+    .headerCard{ padding:0; overflow:hidden; }
+    .headerBar{
+      height: 12px;
+      /* ✅ ตามภาพ: ไล่สีม่วงไปชมพู */
+      background: linear-gradient(90deg,
+        var(--accent1) 0%,
+        var(--accent2) 45%,
+        var(--accent4) 100%
+      );
+    }
+    .headerInner{ padding: 18px 18px 16px; }
+    .titleTH{
+      margin:0;
+      font-size: clamp(22px, 3.2vw, 30px);
+      font-weight: 900;
+      letter-spacing:.2px;
+      line-height:1.2;
+    }
+    .titleEN{
+      margin-top:6px;
+      font-size:20px;
+      font-weight:750;
+      color: var(--sub);
+    }
+    .headerSpacer{ height: 12px; }
+    .locTH{
+      font-size:14px;
+      font-weight:850;
+      color: var(--text);
+      margin:0;
+    }
+    .locEN{
+      margin-top:4px;
+      font-size:13px;
+      font-weight:650;
+      color: var(--muted);
+    }
+    .miniNote{
+      margin-top:10px;
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.55;
+    }
+
+    /* Info / details */
+    details.details{
+      margin-top: 12px;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+    details.details summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight: 850;
+      color: var(--sub);
+      font-size: 13px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(17,24,39,.03);
+    }
+    details.details summary::-webkit-details-marker{ display:none; }
+    .details-body{
+      margin-top: 10px;
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .details-body .muted{ color: var(--muted); }
+
+    /* Titles inside cards */
+    .card-title{
+      text-align:center;
+      margin: 4px 0 14px;
+    }
+    .card-title .th{
+      font-size: 18px;
+      font-weight: 900;
+      margin:0;
+    }
+    .card-title .en{
+      display:block;
+      margin-top:4px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    /* Form */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 14px;
+    }
+    .field{ position:relative; }
+    .label{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      margin-bottom: 6px;
+    }
+    .label .th{
+      font-weight: 850;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .label .en{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .req{ color: var(--danger); margin-left:4px; }
+
+    input[type="text"], select{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      outline:none;
+      background:#fff;
+      font-size: 14px;
+      color: var(--text);
+      transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+    }
+    input[type="text"]::placeholder{ color: var(--muted2); }
+
+    input[type="text"]:focus, select:focus{
+      border-color: rgba(196,181,253,.90);
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
+    .error{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--danger);
+      display:none;
+      line-height: 1.35;
+    }
+    .field.invalid input,
+    .field.invalid select{
+      border-color: rgba(239,68,68,.75);
+      background: var(--dangerBg);
+    }
+    .field.invalid .error{ display:block; }
+
+    .actions{
+      display:flex;
+      justify-content:center;
+      margin-top: 16px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn{
+      border:none;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-weight: 900;
+      cursor:pointer;
+      transition: transform .08s ease, opacity .15s ease, box-shadow .15s ease;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .btn.primary{
+      color:#0b1b1a;
+
+      /* ✅ ปุ่มตามภาพ: ม่วง -> ชมพู */
+      background: linear-gradient(90deg,
+        var(--accent2) 0%,
+        var(--accent1) 10%,
+        var(--accent2) 50%,
+        var(--accent4) 100%
+      );
+
+      box-shadow: 0 10px 18px rgba(196,181,253,.22);
+    }
+    .btn.primary:hover{ transform: translateY(-1px); }
+    .btn.primary:active{ transform: translateY(0px); }
+    .btn.primary:disabled{
+      cursor:not-allowed;
+      opacity:.55;
+      box-shadow:none;
+    }
+
+    .btn.secondary{
+      background:#fff;
+      border:1px solid var(--border);
+      color: var(--sub);
+      box-shadow:none;
+    }
+    .btn.secondary:hover{
+      transform: translateY(-1px);
+      border-color: rgba(196,181,253,.65);
+    }
+    .btn.secondary:active{ transform: translateY(0px); }
+
+    .helper{
+      text-align:center;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .helper .en{
+      display:block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    /* Place / Question layout */
+    .center{ text-align:center; }
+    .place-text{
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 0 auto 12px;
+      max-width: 760px;
+    }
+    .img-wrap{
+      background: rgba(17,24,39,.02);
+      border:1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px;
+    }
+    img{ display:block; width:100%; height:auto; border-radius: 12px; }
+
+    .question-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .qtitle{
+      margin:0;
+      font-weight: 950;
+      font-size: 18px;
+      line-height:1.25;
+    }
+    .qtitle .en-inline{
+      display:block;
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .progress{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 750;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(17,24,39,.04);
+      border: 1px solid rgba(229,231,235,.7);
+    }
+
+    .question-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items:stretch;
+      margin-top: 10px;
+    }
+    .img-card{
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.82);
+      padding: 10px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .img-cap{
+      font-size: 12px;
+      font-weight: 850;
+      color: var(--sub);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .img-cap span:last-child{
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    /* กรอบรูปสูงเท่ากัน */
+    .img-box{
+      height: 320px;
+      border-radius: 14px;
+      background: rgba(17,24,39,.02);
+      border: 1px dashed rgba(229,231,235,.95);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 8px;
+      overflow:hidden;
+      position: relative;
+    }
+    .img-box img{
+      width:100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    .img-missing{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .img-box.missing .img-missing{ display:flex; }
+
+    .fineprint{
+      text-align:center;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .switches{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .switches .btnChoice{
+      width:100%;
+      border-radius: 14px;
+      padding: 12px 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor:pointer;
+      font-weight: 900;
+      color: var(--text);
+      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .switches .btnChoice .en{
+      display:block;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .switches .btnChoice:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 16px rgba(17,24,39,.08);
+      border-color: rgba(196,181,253,.65);
+    }
+    .switches .btnChoice:active{ transform: translateY(0px); }
+
+    #result{
+      font-size: 13px;
+      color: var(--sub);
+      line-height: 1.75;
+      text-align:left;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .status-ok{ color: #065f46; font-weight: 950; }
+    .status-bad{ color: #991b1b; font-weight: 950; }
+
+    @media (max-width: 760px){
+      .grid{ grid-template-columns: 1fr; }
+      .question-grid{ grid-template-columns: 1fr; }
+      .switches{ grid-template-columns: 1fr; }
+      .img-box{ height: 260px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="card headerCard">
+      <div class="headerBar"></div>
+      <div class="headerInner">
+        <h1 class="titleTH">แบบฟอร์มสำรวจการใช้งานสวิตช์ไฟ 💡</h1>
+        <div class="titleEN">(Light Switch Usage Survey Form)</div>
+
+        <div class="headerSpacer"></div>
+
+        <div class="locTH">สถานที่ศึกษา: บริเวณอาคาร 12 ชั้น ห้องคอม E12-109 คณะวิศวกรรมศาสตร์</div>
+        <div class="locEN">(Study location: 12 Floor Building, Computer Room E12-109, Faculty of Engineering, KMITL)</div>
+
+        <div class="miniNote">
+          ข้อมูลที่เก็บรวบรวมใช้เพื่อการศึกษาเท่านั้น และไม่เปิดเผยตัวตน
+          (Educational use only, anonymous.)
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 1 -->
+    <div id="section1" class="section active">
+
+      <div class="card">
+        <details class="details">
+          <summary>แสดงรายละเอียด (Show details)</summary>
+          <div class="details-body">
+            <div>
+              ➤ แบบทดสอบนี้เป็นการเก็บข้อมูลเพื่อศึกษาในรายวิชา <b>Advanced Topics in Human Factors</b>
+              ดำเนินการโดยนักศึกษาวิศวกรรมอุตสาหการ ชั้นปีที่ 4
+              สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง ปีการศึกษา 2/2568
+            </div>
+
+            <div class="muted" style="margin-top:10px;">
+              (This test is conducted for data collection as part of the course <b>Advanced Topics in Human Factors</b>.
+              The study is carried out by 4th year students in the Department of Industrial Engineering,
+              King Mongkut’s Institute of Technology Ladkrabang (KMITL), Academic Year 2/2025.)
+            </div>
+
+            <div style="margin-top:14px; font-weight:950;">คำอธิบาย (Description)</div>
+
+            <div style="margin-top:6px;">
+              ➤ แบบทดสอบนี้จัดทำขึ้นเพื่อสำรวจความเข้าใจในการใช้งานสวิตช์ไฟแบบหลายปุ่ม
+              โดยผู้เข้าร่วมจะได้รับภาพแผงสวิตช์และภาพแสดงตำแหน่งของหลอดไฟ แล้วระบุว่าสวิตช์แต่ละปุ่มควบคุมตำแหน่งใด
+              ข้อมูลที่เก็บรวบรวมใช้เพื่อการศึกษาเท่านั้น และไม่เปิดเผยตัวตนของผู้ตอบแบบฟอร์ม 🙇🏻‍♀️
+            </div>
+
+            <div class="muted" style="margin-top:10px;">
+              (This test studies users’ understanding of multi-button light switches.
+              Participants identify which switch controls each light based on the provided images.
+              All data will be used for educational purposes only and will remain anonymous.)
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <p class="th">ส่วนที่ 1 ข้อมูลผู้เข้าทดสอบ</p>
+          <span class="en">(Participant Information)</span>
+        </div>
+
+        <div class="grid">
+          <div class="field" id="f_name">
+            <div class="label">
+              <span class="th">ชื่อเล่น <span class="req">*</span></span>
+              <span class="en">(Nickname)</span>
+            </div>
+            <input type="text" id="name" placeholder="เช่น Bunny" />
+            <div class="error" id="e_name"></div>
+          </div>
+
+          <div class="field" id="f_gender">
+            <div class="label">
+              <span class="th">เพศกำเนิด <span class="req">*</span></span>
+              <span class="en">(Sex at birth)</span>
+            </div>
+            <select id="gender">
+              <option value="">-- เลือก / Select --</option>
+              <option value="ชาย (Male)">ชาย (Male)</option>
+              <option value="หญิง (Female)">หญิง (Female)</option>
+            </select>
+            <div class="error" id="e_gender"></div>
+          </div>
+
+          <div class="field" id="f_age">
+            <div class="label">
+              <span class="th">ช่วงอายุ <span class="req">*</span></span>
+              <span class="en">(Age range)</span>
+            </div>
+            <select id="age">
+              <option value="">-- เลือก / Select --</option>
+              <option value="ต่ำกว่า 20 ปี (Under 20)">ต่ำกว่า 20 ปี (Under 20)</option>
+              <option value="20–22 ปี (20–22)">20–22 ปี (20–22)</option>
+              <option value="23–25 ปี (23–25)">23–25 ปี (23–25)</option>
+              <option value="มากกว่า 25 ปี (Over 25)">มากกว่า 25 ปี (Over 25)</option>
+            </select>
+            <div class="error" id="e_age"></div>
+          </div>
+
+          <div class="field" id="f_status">
+            <div class="label">
+              <span class="th">สถานภาพในมหาวิทยาลัย <span class="req">*</span></span>
+              <span class="en">(Status)</span>
+            </div>
+            <select id="status">
+              <option value="">-- เลือก / Select --</option>
+              <option value="นักศึกษา (Student)" selected>นักศึกษา (Student)</option>
+              <option value="อาจารย์ (Lecturer)">อาจารย์ (Lecturer)</option>
+              <option value="บุคลากร (Staff)">บุคลากร (Staff)</option>
+            </select>
+            <div class="error" id="e_status"></div>
+          </div>
+
+          <div class="field" id="f_experience" style="grid-column: 1 / -1;">
+            <div class="label">
+              <span class="th">เคยใช้งานบริเวณตึก 12 ชั้นหรือไม่? <span class="req">*</span></span>
+              <span class="en">(Have you used this area before?)</span>
+            </div>
+            <select id="experience">
+              <option value="">-- เลือก / Select --</option>
+              <option value="เคย (Yes)" selected>เคย (Yes)</option>
+              <option value="ไม่เคย (No)">ไม่เคย (No)</option>
+            </select>
+            <div class="error" id="e_experience"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnNext" class="btn primary" type="button" onclick="goToPlace()" disabled>ถัดไป (Next)</button>
+        </div>
+
+        <div class="helper">
+          ช่องที่มีเครื่องหมาย<span class="req">*</span> จำเป็นต้องกรอก/เลือก
+          <span class="en">(Fields marked with * are required.)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 2 แนะนำสถานที่ -->
+    <div id="section2_place" class="section">
+      <div class="card center">
+        <div class="card-title">
+          <p class="th">ส่วนที่ 2 แนะนำสถานที่</p>
+          <span class="en">(Location Overview)</span>
+        </div>
+
+        <p class="place-text">
+          กรุณาศึกษาภาพรวมตำแหน่งโซนไฟ (A, B, C, D) และตำแหน่งแผงสวิตช์ ก่อนเริ่มทำแบบทดสอบ<br>
+          <span style="color:var(--muted); font-weight:650;">
+            (Please review the overall layout of the lighting zones (A, B, C, D) and the switch panel location before starting the test.)
+          </span>
+        </p>
+
+        <div class="img-wrap" style="max-width: 780px; margin: 0 auto;">
+          <img id="placeImg1" alt="แผนผังตึก 12 ชั้น (1)">
+        <div style="height:10px;"></div>
+          <img id="placeImg2" alt="แผนผังตึก 12 ชั้น (2)">
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary" type="button" onclick="backToInfo()">ย้อนกลับ (Back)</button>
+          <button class="btn primary" type="button" onclick="goToInstruction()">เริ่มการทดสอบ (Start)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 3 คำแนะนำ -->
+    <div id="section3_intro" class="section">
+      <div class="card center">
+        <div class="card-title">
+          <p class="th">ส่วนที่ 3 คำแนะนำ</p>
+          <span class="en">Instructions</span>
+        </div>
+
+        <p class="place-text">
+          เลือกสวิตช์ไฟที่ใช้เปิดไฟในตำแหน่งที่กำหนด (ทั้งหมด 4 ข้อ)<br>
+          <span style="color:var(--muted); font-weight:650;">
+            Choose the switch that turns on the specified light position (4 questions.)
+          </span>
+        </p>
+
+        <div class="progress" style="margin: 10px auto 0; width: fit-content;">
+          เริ่มทดสอบใน <span id="countdown">5</span> · Starting in <span id="countdown2">5</span>
+        </div>
+
+        <!-- ✅ เอาปุ่มย้อนกลับออกแล้ว (ไม่มี Back ในหน้านี้) -->
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 4 คำถาม -->
+    <div id="section4_test" class="section">
+      <div class="card">
+        <div class="question-top">
+          <div>
+            <h2 id="questionText" class="qtitle"></h2>
+          </div>
+          <div class="progress" id="progressText">ข้อ 1/4 · Q1/4</div>
+        </div>
+
+        <div class="fineprint" style="margin-top:-2px;">
+        </div>
+
+        <div class="question-grid">
+          <div class="img-card">
+            <div class="img-cap">
+              <span>ภาพตำแหน่งไฟ</span>
+              <span>Light zone</span>
+            </div>
+            <div class="img-box" id="boxA">
+              <img id="imgA" alt="ภาพตำแหน่งไฟ">
+              <div class="img-missing">ไม่พบรูปภาพโซนไฟ<br>(Image not found)</div>
+            </div>
+          </div>
+
+          <div class="img-card">
+            <div class="img-cap">
+              <span>ภาพสวิตช์</span>
+              <span>Switch panel</span>
+            </div>
+            <div class="img-box" id="boxB">
+              <img id="imgB" alt="ภาพสวิตช์">
+              <div class="img-missing">ไม่พบรูปภาพสวิตช์<br>(Image not found)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fineprint">กรุณาเลือกให้เร็วและแม่นยำ (Please answer quickly and accurately.)</div>
+
+        <div class="switches">
+          <button class="btnChoice" type="button" onclick="answer(1)">สวิตช์ที่ 1<span class="en">(Switch 1)</span></button>
+          <button class="btnChoice" type="button" onclick="answer(2)">สวิตช์ที่ 2<span class="en">(Switch 2)</span></button>
+          <button class="btnChoice" type="button" onclick="answer(3)">สวิตช์ที่ 3<span class="en">(Switch 3)</span></button>
+          <button class="btnChoice" type="button" onclick="answer(4)">สวิตช์ที่ 4<span class="en">(Switch 4)</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 5 ผลลัพธ์ -->
+    <div id="section5_result" class="section">
+      <div class="card center">
+        <div class="card-title">
+          <p class="th">ผลการทดสอบ</p>
+          <span class="en">Result</span>
+        </div>
+        <div id="result"></div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const GOOGLE_SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzqOhxEW_yVnpX__nVQtWWA6azXG4Wb2IpCtdYawd6XE4QlAMv3uGZmuY9ON1IJ6zWB/exec";
+
+  const IMG_BASE_CANDIDATES = [
+    new URL(".", window.location.href).href,
+    "https://mumu21-art.github.io/humanfactors_switch/"
+  ];
+
+  function setImgWithFallback(imgEl, filename, boxEl){
+    let i = 0;
+    const tryLoad = () => {
+      if (i >= IMG_BASE_CANDIDATES.length) {
+        if (boxEl) boxEl.classList.add("missing");
+        imgEl.removeAttribute("src");
+        return;
+      }
+      const url = IMG_BASE_CANDIDATES[i] + filename;
+      i++;
+      imgEl.src = url;
+    };
+    imgEl.onerror = () => tryLoad();
+    if (boxEl) boxEl.classList.remove("missing");
+    tryLoad();
+  }
+
+  let questions = [
+    { qid: "A", img1: "A1.jpg", img2: "A2.png" },
+    { qid: "B", img1: "B1.jpg", img2: "B2.png" },
+    { qid: "C", img1: "C1.jpg", img2: "C2.png" },
+    { qid: "D", img1: "D1.jpg", img2: "D2.png" }
+  ];
+  questions = questions.sort(() => Math.random() - 0.5);
+
+  let current = 0;
+  let startTime;
+  let times = [];
+  let surveyStart = null;
+  let surveyEnd = null;
+  const MAX_TIME = 60;
+  let isSubmitting = false;
+
+  const section1 = document.getElementById("section1");
+  const section2_place = document.getElementById("section2_place");
+  const section3_intro = document.getElementById("section3_intro");
+  const section4_test = document.getElementById("section4_test");
+  const section5_result = document.getElementById("section5_result");
+
+  const questionText = document.getElementById("questionText");
+  const progressText = document.getElementById("progressText");
+  const imgA = document.getElementById("imgA");
+  const imgB = document.getElementById("imgB");
+  const boxA = document.getElementById("boxA");
+  const boxB = document.getElementById("boxB");
+  const result = document.getElementById("result");
+
+  const placeImg1 = document.getElementById("placeImg1");
+  const placeImg2 = document.getElementById("placeImg2");
+  
+  setImgWithFallback(placeImg1, "Location_E12-109_01.jpg");
+  setImgWithFallback(placeImg2, "Location_E12-109_02.jpg");
+  
+  const btnNext = document.getElementById("btnNext");
+
+  const validators = [
+    { id: "name", field: "f_name", err: "e_name", message: "กรุณากรอกชื่อเล่น (Please enter a nickname).",
+      check: v => v.trim().length > 0 },
+    { id: "gender", field: "f_gender", err: "e_gender", message: "กรุณาเลือกเพศกำเนิด (Please select sex at birth).",
+      check: v => v.trim().length > 0 },
+    { id: "age", field: "f_age", err: "e_age", message: "กรุณาเลือกช่วงอายุ (Please select age range).",
+      check: v => v.trim().length > 0 },
+    { id: "status", field: "f_status", err: "e_status", message: "กรุณาเลือกสถานภาพ (Please select status).",
+      check: v => v.trim().length > 0 },
+    { id: "experience", field: "f_experience", err: "e_experience", message: "กรุณาเลือกประสบการณ์ใช้งาน (Please select an option).",
+      check: v => v.trim().length > 0 },
+  ];
+
+  function setInvalid(v, msg){
+    const wrap = document.getElementById(v.field);
+    const err = document.getElementById(v.err);
+    wrap.classList.add("invalid");
+    err.textContent = msg;
+  }
+  function clearInvalid(v){
+    const wrap = document.getElementById(v.field);
+    const err = document.getElementById(v.err);
+    wrap.classList.remove("invalid");
+    err.textContent = "";
+  }
+
+  function validateSection1(showMsg = true){
+    let ok = true;
+    let firstBadEl = null;
+
+    validators.forEach(v => {
+      const el = document.getElementById(v.id);
+      const val = (el.value || "");
+      const pass = v.check(val);
+      if(!pass){
+        ok = false;
+        if(showMsg) setInvalid(v, v.message);
+        if(!firstBadEl) firstBadEl = el;
+      }else{
+        clearInvalid(v);
+      }
+    });
+
+    if(showMsg && firstBadEl){
+      firstBadEl.scrollIntoView({ behavior:"smooth", block:"center" });
+      try{ firstBadEl.focus({ preventScroll:true }); }catch(e){}
+    }
+    return ok;
+  }
+
+  function updateNextButtonState(){
+    btnNext.disabled = !validateSection1(false);
+  }
+
+  ["name","gender","age","status","experience"].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener("input", updateNextButtonState);
+    el.addEventListener("change", updateNextButtonState);
+  });
+  updateNextButtonState();
+
+  function goToPlace(){
+    if(!validateSection1(true)) return;
+    section1.classList.remove("active");
+    section2_place.classList.add("active");
+  }
+
+  function backToInfo(){
+    section2_place.classList.remove("active");
+    section1.classList.add("active");
+  }
+
+  function goToInstruction(){
+    section2_place.classList.remove("active");
+    section3_intro.classList.add("active");
+
+    let c = 5;
+    const cd = document.getElementById("countdown");
+    const cd2 = document.getElementById("countdown2");
+    cd.textContent = c;
+    cd2.textContent = c;
+
+    const t = setInterval(()=>{
+      c--;
+      cd.textContent = c;
+      cd2.textContent = c;
+      if(c === 0){
+        clearInterval(t);
+        startTest();
+      }
+    }, 1000);
+  }
+
+  function startTest(){
+    section3_intro.classList.remove("active");
+    section4_test.classList.add("active");
+
+    surveyStart = Date.now();
+    loadQuestion();
+  }
+
+  function loadQuestion(){
+    const q = questions[current];
+
+    progressText.textContent = `ข้อ ${current+1}/4 · Q${current+1}/4`;
+    questionText.innerHTML =
+      `Q${current+1}: ถ้าอยากเปิดไฟตำแหน่ง <b>${q.qid}</b> ต้องกดสวิตช์ใด?
+       <span class="en-inline">(Which switch turns on zone ${q.qid}?)</span>`;
+
+    setImgWithFallback(imgA, q.img1, boxA);
+    setImgWithFallback(imgB, q.img2, boxB);
+
+    startTime = Date.now();
+  }
+
+  function getParticipantInfo(){
+    return {
+      name: document.getElementById("name").value.trim(),
+      gender: document.getElementById("gender").value,
+      age: document.getElementById("age").value,
+      status: document.getElementById("status").value,
+      experience: document.getElementById("experience").value
+    };
+  }
+
+  function answer(choice){
+    if(isSubmitting) return;
+
+    const q = questions[current];
+    const rawTime = (Date.now() - startTime) / 1000;
+    const isValid = rawTime <= MAX_TIME;
+
+    times.push({
+      order: current + 1,
+      qid: q.qid,
+      choice: choice,
+      time: rawTime.toFixed(2),
+      isValid: isValid
+    });
+
+    current++;
+    if(current < questions.length) loadQuestion();
+    else showResult();
+  }
+
+  async function submitToGoogleSheets(payload){
+    const body = new URLSearchParams({ payload: JSON.stringify(payload) });
+
+    await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: body.toString()
+    });
+
+    return { ok: true };
+  }
+
+  async function showResult(){
+    section4_test.classList.remove("active");
+    section5_result.classList.add("active");
+
+    surveyEnd = Date.now();
+    const totalTime = ((surveyEnd - surveyStart) / 1000).toFixed(2);
+
+    isSubmitting = true;
+
+    let html = "<div>";
+    times.forEach(t=>{
+      const tag = t.isValid ? "" : " <span class='status-bad'>(invalid)</span>";
+      html += `ข้อ(${t.qid}) ลำดับที่ ${t.order} เลือกสวิตช์ ${t.choice} ใช้เวลา ${t.time} วินาที${tag}<br>`;
+    });
+    html += `</div><br><b>เวลารวม:</b> ${totalTime} วินาที<br>`;
+    html += `<div style="margin-top:10px; color: var(--muted);"><em>กำลังบันทึกข้อมูล...</em></div>`;
+
+    result.innerHTML = html;
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      participant: getParticipantInfo(),
+      questionOrder: questions.map(q => q.qid),
+      answers: times,
+      totalTime: totalTime
+    };
+
+    try{
+      await submitToGoogleSheets(payload);
+      result.innerHTML =
+        html.replace("กำลังบันทึกข้อมูล...", "<span class='status-ok'>✅ บันทึกข้อมูลเรียบร้อย</span>");
+    }catch(err){
+      result.innerHTML =
+        html.replace("กำลังบันทึกข้อมูล...", `<span class='status-bad'>❌ บันทึกไม่สำเร็จ:</span> ${err.message}`);
+    }finally{
+      isSubmitting = false;
+    }
+  }
+
+  window.goToPlace = goToPlace;
+  window.goToInstruction = goToInstruction;
+  window.answer = answer;
+  window.backToInfo = backToInfo;
+</script>
+</body>
+</html>
+
+
+
+
+
+
