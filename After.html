@@ -919,12 +919,17 @@ async function finishAll(){
     ((Date.now() - surveyStart) / 1000).toFixed(2);
 
   const payload = {
-    type: "after",
-    timestamp: new Date().toISOString(),
-    participant: getParticipantInfo(),
-    after: afterResults,
-    totalTime: totalTime
-  };
+  type: "after",
+  timestamp: new Date().toISOString(),
+  participant: getParticipantInfo(),
+
+  // ✅ เพิ่มบรรทัดนี้
+  solutionOrder: solutions.map(s => s.id).join(","),
+
+  after: afterResults,
+  totalTime: totalTime
+};
+
 
   document.getElementById("result").innerHTML =
     "กำลังบันทึกข้อมูล...";
@@ -959,5 +964,6 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
