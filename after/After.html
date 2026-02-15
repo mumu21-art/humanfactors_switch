@@ -966,8 +966,6 @@ function loadQuestion(){
   let zoneTextTH = "";
   let zoneTextEN = "";
   
-  zoneTextTH = zoneTextTH || "";
-  zoneTextEN = zoneTextEN || "";
   /* =====================================
      เลือกกลุ่มคำถามตาม solution
      ===================================== */
@@ -983,6 +981,9 @@ function loadQuestion(){
     zoneTextTH = zoneTextGroup2[zone];
     zoneTextEN = zoneTextGroup2_EN[zone];
   }
+  
+zoneTextTH = zoneTextTH || "ตำแหน่งที่กำหนด";
+zoneTextEN = zoneTextEN || "specified area";
 
   /* =====================================
      สร้างคำถาม
@@ -1114,8 +1115,8 @@ const totalTime =
 };
 
 
-  document.getElementById("result").innerHTML =
-    "กำลังบันทึกข้อมูล...";
+document.getElementById("result").innerHTML =
+  "กำลังบันทึกข้อมูลนะ... ⏳";
 
 try {
 
@@ -1162,6 +1163,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
