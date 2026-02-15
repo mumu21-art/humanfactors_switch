@@ -846,11 +846,15 @@ function loadSolutionIntro(){
 function startSolutionTest(){
   section_solution_intro.classList.remove("active");
   section4_test.classList.add("active");
+
+  // 🔥 เพิ่มบรรทัดนี้
+  if(currentSolution === 0){
+    surveyStart = Date.now();
+  }
   
   currentQuestion = 0;
   shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
   loadQuestion();
-
 }
 
 function loadQuestion(){
@@ -1000,6 +1004,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
