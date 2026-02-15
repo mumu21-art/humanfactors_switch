@@ -770,7 +770,7 @@ function goToInstruction(){
 
   afterResults = [];
   currentSolution = 0;
-  surveyStart = Date.now();   // 🔥 เพิ่มตรงนี้
+
   shuffledSolutions = shuffleArray(solutions);
 
   let c = 3;
@@ -847,7 +847,7 @@ function startSolutionTest(){
   section_solution_intro.classList.remove("active");
   section4_test.classList.add("active");
 
-  surveyStart = Date.now();
+  surveyStart = Date.now();   // 🔥 เพิ่มตรงนี้
   
   currentQuestion = 0;
   shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
@@ -864,8 +864,8 @@ function loadQuestion(){
   document.getElementById("questionText").innerHTML =
     `ถ้าอยากเปิดไฟตำแหน่ง<b>${shuffledZones[currentQuestion]}</b> ต้องกดสวิตช์ใด?`;
 
-  document.getElementById("imgA").src = sol.zoneImg;
-  document.getElementById("imgB").src = sol.switchImg;
+document.getElementById("imgA").src = "./" + sol.zoneImg;
+document.getElementById("imgB").src = "./" + sol.switchImg;
 
   startTime = Date.now();
 }
@@ -970,7 +970,7 @@ try {
     }).toString()
   });
 
-  const resultJson = await response.json();
+  surveyStart = Date.now();
 
   if(resultJson.ok){
     document.getElementById("result").innerHTML =
@@ -1002,4 +1002,5 @@ window.answer = answer;
   
 </body>
 </html>
+
 
