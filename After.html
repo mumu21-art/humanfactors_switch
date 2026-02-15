@@ -944,7 +944,7 @@ async function finishAll(){
   participant: getParticipantInfo(),
 
   // ✅ เพิ่มบรรทัดนี้
-  solutionOrder: solutions.map(s => s.id).join(","),
+  solutionOrder: shuffledSolutions.map(s => s.id).join(","),
 
   after: afterResults,
   totalTime: totalTime
@@ -984,6 +984,7 @@ try {
 
 }
 
+}  // 🔥 ปิด finishAll() ตรงนี้
 
 /* ===============================
    EXPORT
@@ -999,6 +1000,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
