@@ -928,6 +928,12 @@ const zoneTextGroup1 = {
   C: "บริเวณด้านหน้า",
   D: "บริเวณด้านหลัง"
 };
+const zoneTextGroup1_EN = {
+  A: "outer area",
+  B: "inner area",
+  C: "front area",
+  D: "rear area"
+};
 
 // สำหรับ Solution 4–6
 const zoneTextGroup2 = {
@@ -936,7 +942,13 @@ const zoneTextGroup2 = {
   C: "บริเวณกลางห้อง",
   D: "บริเวณหลังห้อง"
 };
-
+const zoneTextGroup2_EN = {
+  A: "XXX area",
+  B: "XXX area",
+  C: "XXX area",
+  D: "XXX area"
+};
+  
 function loadQuestion(){
     /* =====================================
      รีเซ็ตสีปุ่มทุกครั้งที่โหลดข้อใหม่
@@ -1035,7 +1047,7 @@ function answer(choice){
     setTimeout(()=>{
       isAnswering = false;
       loadQuestion();
-    },200);
+    },500);
 
   } else {
 
@@ -1048,7 +1060,7 @@ function answer(choice){
         section4_test.classList.remove("active");
         section_solution_intro.classList.add("active");
         loadSolutionIntro();
-      },200);
+      },500);
 
     } else {
 
@@ -1142,4 +1154,5 @@ window.answer = answer;
   
 </body>
 </html>
+
 
