@@ -902,18 +902,45 @@ function startSolutionTest(){
 
 function loadQuestion(){
   const sol = shuffledSolutions[currentSolution];
+  const zone = shuffledZones[currentQuestion];
+
+  let question = "";
+
+  if(sol.id === 1){
+    question = `ถ้าต้องการเปิดไฟที่แสดงด้วยสี <b>${zone}</b> ต้องกดสวิตช์ใด?`;
+  }
+
+  else if(sol.id === 2){
+    question = `ถ้าต้องการเปิดไฟตำแหน่ง <b>${zone}</b> ต้องกดสวิตช์ใด?`;
+  }
+
+  else if(sol.id === 3){
+    question = `ถ้าต้องการเปิดไฟตำแหน่ง <b>${zone}</b> (ตามสีที่กำหนด) ต้องกดสวิตช์ใด?`;
+  }
+
+  else if(sol.id === 4){
+    question = `ถ้าต้องการเปิดไฟโซนลำดับที่ <b>${currentQuestion+1}</b> จากด้านหน้าห้อง ต้องกดสวิตช์ใด?`;
+  }
+
+  else if(sol.id === 5){
+    question = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ตามสีที่กำหนด ต้องกดสวิตช์ใด?`;
+  }
+
+  else if(sol.id === 6){
+    question = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ต้องกดสวิตช์ใด?`;
+  }
+
+  document.getElementById("questionText").innerHTML = question;
 
   document.getElementById("progressText").textContent =
     `Solution ${sol.id} | ${currentQuestion+1}/4`;
 
-  document.getElementById("questionText").innerHTML =
-    `ถ้าอยากเปิดไฟตำแหน่ง<b>${shuffledZones[currentQuestion]}</b> ต้องกดสวิตช์ใด?`;
-
-document.getElementById("imgA").src = "./" + sol.zoneImg;
-document.getElementById("imgB").src = "./" + sol.switchImg;
+  document.getElementById("imgA").src = "./" + sol.zoneImg;
+  document.getElementById("imgB").src = "./" + sol.switchImg;
 
   startTime = Date.now();
 }
+
 
 /* ===============================
    ANSWER
@@ -1047,6 +1074,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
