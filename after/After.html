@@ -908,27 +908,27 @@ function loadQuestion(){
   let questionEN = "";
 
   if(sol.id === 1){
-    questionTH = `ถ้าต้องการเปิดไฟที่แสดงด้วยสี <b>${zone}</b> ต้องกดสวิตช์ใด?`;
+    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
     questionEN = `(Which switch turns on the light shown in color ${zone}?)`;
   }
 
   else if(sol.id === 2){
-    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง <b>${zone}</b> ต้องกดสวิตช์ใด?`;
+    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
     questionEN = `(Which switch turns on zone ${zone}?)`;
   }
 
   else if(sol.id === 3){
-    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง <b>${zone}</b> (ตามสีที่กำหนด) ต้องกดสวิตช์ใด?`;
+    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
     questionEN = `(Which switch turns on zone ${zone} according to the assigned color?)`;
   }
 
   else if(sol.id === 4){
-    questionTH = `ถ้าต้องการเปิดไฟโซนลำดับที่ <b>${currentQuestion+1}</b> จากด้านหน้าห้อง ต้องกดสวิตช์ใด?`;
+    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${currentQuestion+1}</b> ต้องกดสวิตช์ใด?`;
     questionEN = `(Which switch turns on zone number ${currentQuestion+1} from the front of the room?)`;
   }
 
   else if(sol.id === 5){
-    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ตามสีที่กำหนด ต้องกดสวิตช์ใด?`;
+    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ต้องกดสวิตช์ใด?`;
     questionEN = `(Which switch turns on zone ${zone} based on its color?)`;
   }
 
@@ -1087,4 +1087,5 @@ window.answer = answer;
 
 
    
+
 
