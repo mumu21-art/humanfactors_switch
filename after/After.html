@@ -846,8 +846,6 @@ function loadSolutionIntro(){
 function startSolutionTest(){
   section_solution_intro.classList.remove("active");
   section4_test.classList.add("active");
-
-  surveyStart = Date.now();   // 🔥 เพิ่มตรงนี้
   
   currentQuestion = 0;
   shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
@@ -960,25 +958,25 @@ async function finishAll(){
 try {
 
   const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL,{
-    method:"POST",
-    headers:{
-      "Content-Type":
-      "application/x-www-form-urlencoded;charset=UTF-8"
-    },
-    body:new URLSearchParams({
-      payload: JSON.stringify(payload)
-    }).toString()
-  });
+  method:"POST",
+  headers:{
+    "Content-Type":
+    "application/x-www-form-urlencoded;charset=UTF-8"
+  },
+  body:new URLSearchParams({
+    payload: JSON.stringify(payload)
+  }).toString()
+});
 
-  surveyStart = Date.now();
+const resultJson = await response.json(); // 🔥 ต้องมีบรรทัดนี้
 
-  if(resultJson.ok){
-    document.getElementById("result").innerHTML =
-      "✅ บันทึกข้อมูลเรียบร้อย";
-  } else {
-    document.getElementById("result").innerHTML =
-      "❌ เกิดข้อผิดพลาดในการบันทึก";
-  }
+if(resultJson.ok){
+  document.getElementById("result").innerHTML =
+    "✅ บันทึกข้อมูลเรียบร้อย";
+} else {
+  document.getElementById("result").innerHTML =
+    "❌ เกิดข้อผิดพลาดในการบันทึก";
+}
 
 } catch(err){
 
@@ -1002,5 +1000,6 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
