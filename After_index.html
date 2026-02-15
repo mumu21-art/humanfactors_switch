@@ -716,14 +716,17 @@
 
 <script>
 
-/* =================================================
+/* ===============================
    VALIDATE SECTION 1
-================================================= */
+================================ */
 
 const btnNext = document.getElementById("btnNext");
 const section1 = document.getElementById("section1");
 const section2_place = document.getElementById("section2_place");
 const section3_intro = document.getElementById("section3_intro");
+const section4_test = document.getElementById("section4_test");
+const section_solution_intro = document.getElementById("section_solution_intro");
+const section5_result = document.getElementById("section5_result");
 
 function validateSection1(){
   return (
@@ -745,13 +748,12 @@ function updateNextButtonState(){
   el.addEventListener("change", updateNextButtonState);
 });
 
-/* =================================================
+/* ===============================
    NAVIGATION
-================================================= */
+================================ */
 
 function goToPlace(){
   if(!validateSection1()) return;
-
   section1.classList.remove("active");
   section2_place.classList.add("active");
 }
@@ -779,14 +781,16 @@ function goToInstruction(){
 
     if(c === 0){
       clearInterval(t);
-      startTest();
+      section3_intro.classList.remove("active");
+      section_solution_intro.classList.add("active");
+      loadSolutionIntro();
     }
   },1000);
 }
 
-/* =================================================
+/* ===============================
    CONFIG
-================================================= */
+================================ */
 
 const GOOGLE_SHEETS_WEBAPP_URL =
 "https://script.google.com/macros/s/AKfycbzqOhxEW_yVnpX__nVQtWWA6azXG4Wb2IpCtdYawd6XE4QlAMv3uGZmuY9ON1IJ6zWB/exec";
@@ -794,7 +798,7 @@ const GOOGLE_SHEETS_WEBAPP_URL =
 const zones = ["A","B","C","D"];
 
 const solutions = [
-  { id:1, title:"Solution 1: ใช้สี", desc:"ใช้สีแยกโซน", switchImg:"after/S1_switch.jpgjpg", zoneImg:"after/S1_zone.jpg" },
+  { id:1, title:"Solution 1: ใช้สี", desc:"ใช้สีแยกโซน", switchImg:"after/S1_switch.jpg", zoneImg:"after/S1_zone.jpg" },
   { id:2, title:"Solution 2: Layout ตรงผัง", desc:"จัดเรียงให้ตรง", switchImg:"after/S2_switch.jpg", zoneImg:"after/S2_zone.jpg" },
   { id:3, title:"Solution 3: เพิ่ม icon", desc:"ใช้สัญลักษณ์", switchImg:"after/S3_switch.jpg", zoneImg:"after/S3_zone.jpg" },
   { id:4, title:"Solution 4: เพิ่มหมายเลข", desc:"ใส่ตัวเลขกำกับ", switchImg:"after/S4_switch.jpg", zoneImg:"after/S4_zone.jpg" },
@@ -802,69 +806,29 @@ const solutions = [
   { id:6, title:"Solution 6: ผสมทั้งหมด", desc:"รวมหลายเทคนิค", switchImg:"after/S6_switch.jpg", zoneImg:"after/S6_zone.jpg" }
 ];
 
-let questions = [
-  { qid: "A", img1: "before/A1.jpg", img2: "before/A2.png" },
-  { qid: "B", img1: "before/B1.jpg", img2: "before/B2.png" },
-  { qid: "C", img1: "before/C1.jpg", img2: "before/C2.png" },
-  { qid: "D", img1: "before/D1.jpg", img2: "before/D2.png" }
-];
+function shuffleArray(array){
+  const arr = [...array];
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-questions = questions.sort(() => Math.random() - 0.5);
-
-/* =================================================
+/* ===============================
    STATE
-================================================= */
+================================ */
 
 let currentSolution = 0;
-let currentAfterQuestion = 0;
+let currentQuestion = 0;
+let shuffledZones = [];
 let afterResults = [];
-
 let startTime;
 let surveyStart;
-let surveyEnd;
 
-/* =================================================
-   DOM
-================================================= */
-
-const section4_test = document.getElementById("section4_test");
-const section_solution_intro = document.getElementById("section_solution_intro");
-const section5_result = document.getElementById("section5_result");
-
-const questionText = document.getElementById("questionText");
-const progressText = document.getElementById("progressText");
-const imgA = document.getElementById("imgA");
-const imgB = document.getElementById("imgB");
-const result = document.getElementById("result");
-
-/* =================================================
-   BEFORE TEST
-================================================= */
-
-function startTest(){
-  section3_intro.classList.remove("active");
-  section4_test.classList.add("active");
-
-  surveyStart = Date.now();
-  loadBeforeQuestion();
-}
-
-function loadBeforeQuestion(){
-  const q = questions[currentBefore];
-
-  progressText.textContent = `Before | ${currentBefore+1}/4`;
-  questionText.innerHTML =
-    `ถ้าอยากเปิดไฟตำแหน่ง <b>${q.qid}</b> ต้องกดสวิตช์ใด?`;
-
-  imgA.src = q.img1;
-  imgB.src = q.img2;
-
-  startTime = Date.now();
-}
-
-/* =================================================
-   AFTER
-================================================= */
+/* ===============================
+   AFTER FLOW
+================================ */
 
 function loadSolutionIntro(){
   const sol = solutions[currentSolution];
@@ -876,67 +840,47 @@ function startSolutionTest(){
   section_solution_intro.classList.remove("active");
   section4_test.classList.add("active");
 
-  currentAfterQuestion = 0;
-  loadAfterQuestion();
+  surveyStart = surveyStart || Date.now();
+  currentQuestion = 0;
+  shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
+  loadQuestion();
+
 }
 
-function loadAfterQuestion(){
+function loadQuestion(){
   const sol = solutions[currentSolution];
 
-  progressText.textContent =
-    `Solution ${sol.id} | ${currentAfterQuestion+1}/4`;
+  document.getElementById("progressText").textContent =
+    `Solution ${sol.id} | ${currentQuestion+1}/4`;
 
-  questionText.innerHTML =
-    `ถ้าอยากเปิดไฟตำแหน่ง <b>${zones[currentAfterQuestion]}</b> ต้องกดสวิตช์ใด?`;
+  document.getElementById("questionText").innerHTML =
+    `ถ้าอยากเปิดไฟตำแหน<b>${shuffledZones[currentQuestion]}</b> ต้องกดสวิตช์ใด?`;
 
-  imgA.src = sol.zoneImg;
-  imgB.src = sol.switchImg;
+  document.getElementById("imgA").src = sol.zoneImg;
+  document.getElementById("imgB").src = sol.switchImg;
 
   startTime = Date.now();
 }
 
-/* =================================================
+/* ===============================
    ANSWER
-================================================= */
+================================ */
 
 function answer(choice){
 
   const rawTime = (Date.now() - startTime) / 1000;
 
-  if(currentBefore < questions.length){
-
-    beforeResults.push({
-      zone: questions[currentBefore].qid,
-      choice: choice,
-      time: rawTime.toFixed(2)
-    });
-
-    currentBefore++;
-
-    if(currentBefore < questions.length){
-      loadBeforeQuestion();
-    } else {
-      section4_test.classList.remove("active");
-      section_solution_intro.classList.add("active");
-      loadSolutionIntro();
-    }
-
-    return;
-  }
-
-  const sol = solutions[currentSolution];
-
   afterResults.push({
-    solution: sol.id,
-    zone: zones[currentAfterQuestion],
+    solution: solutions[currentSolution].id,
+    zone: shuffledZones[currentQuestion],
     choice: choice,
     time: rawTime.toFixed(2)
   });
 
-  currentAfterQuestion++;
+  currentQuestion++;
 
-  if(currentAfterQuestion < 4){
-    loadAfterQuestion();
+  if(currentQuestion < 4){
+    loadQuestion();
   } else {
     currentSolution++;
 
@@ -950,9 +894,9 @@ function answer(choice){
   }
 }
 
-/* =================================================
+/* ===============================
    FINISH
-================================================= */
+================================ */
 
 function getParticipantInfo(){
   return {
@@ -970,55 +914,48 @@ async function finishAll(){
   section_solution_intro.classList.remove("active");
   section5_result.classList.add("active");
 
-  surveyEnd = Date.now();
   const totalTime =
-    ((surveyEnd - surveyStart) / 1000).toFixed(2);
+    ((Date.now() - surveyStart) / 1000).toFixed(2);
 
   const payload = {
+    type: "after",
     timestamp: new Date().toISOString(),
     participant: getParticipantInfo(),
-    before: beforeResults,
     after: afterResults,
     totalTime: totalTime
   };
 
-  result.innerHTML = "กำลังบันทึกข้อมูล...";
+  document.getElementById("result").innerHTML =
+    "กำลังบันทึกข้อมูล...";
 
-  try{
-    await fetch(GOOGLE_SHEETS_WEBAPP_URL,{
-      method:"POST",
-      mode:"no-cors",
-      headers:{
-        "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
-      },
-      body:new URLSearchParams({
-        payload: JSON.stringify(payload)
-      }).toString()
-    });
+  await fetch(GOOGLE_SHEETS_WEBAPP_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":
+      "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body:new URLSearchParams({
+      payload: JSON.stringify(payload)
+    }).toString()
+  });
 
-    result.innerHTML = "✅ บันทึกข้อมูลเรียบร้อย";
-  }catch{
-    result.innerHTML = "❌ บันทึกไม่สำเร็จ";
-  }
+  document.getElementById("result").innerHTML =
+    "✅ บันทึกข้อมูลเรียบร้อย";
 }
 
-/* =================================================
+/* ===============================
    EXPORT
-================================================= */
+================================ */
 
 window.goToPlace = goToPlace;
 window.goToInstruction = goToInstruction;
 window.backToInfo = backToInfo;
-window.answer = answer;
 window.startSolutionTest = startSolutionTest;
+window.answer = answer;
 
 </script>
-
+  
 </body>
 </html>
-
-
-
-
-
 
