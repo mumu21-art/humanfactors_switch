@@ -599,9 +599,9 @@
         </p>
 
         <div class="img-wrap" style="max-width: 780px; margin: 0 auto;">
-          <img id="placeImg1" alt="แผนผังตึก 12 ชั้น (1)">
+          <img id="placeImg1" src="Location_E12-109_01.jpg" alt="แผนผังตึก 12 ชั้น (1)">
         <div style="height:10px;"></div>
-          <img id="placeImg2" alt="แผนผังตึก 12 ชั้น (2)">
+          <img id="placeImg2" src="Location_E12-109_02.jpg" alt="แผนผังตึก 12 ชั้น (2)">
         </div>
 
         <div class="actions">
@@ -728,6 +728,7 @@ const section4_test = document.getElementById("section4_test");
 const section_solution_intro = document.getElementById("section_solution_intro");
 const section5_result = document.getElementById("section5_result");
 
+
 function validateSection1(){
   return (
     document.getElementById("name").value.trim() !== "" &&
@@ -798,12 +799,12 @@ const GOOGLE_SHEETS_WEBAPP_URL =
 const zones = ["A","B","C","D"];
 
 const solutions = [
-  { id:1, title:"Solution 1: ใช้สี", desc:"ใช้สีแยกโซน", switchImg:"after/S1_switch.jpg", zoneImg:"after/S1_zone.jpg" },
-  { id:2, title:"Solution 2: Layout ตรงผัง", desc:"จัดเรียงให้ตรง", switchImg:"after/S2_switch.jpg", zoneImg:"after/S2_zone.jpg" },
-  { id:3, title:"Solution 3: เพิ่ม icon", desc:"ใช้สัญลักษณ์", switchImg:"after/S3_switch.jpg", zoneImg:"after/S3_zone.jpg" },
-  { id:4, title:"Solution 4: เพิ่มหมายเลข", desc:"ใส่ตัวเลขกำกับ", switchImg:"after/S4_switch.jpg", zoneImg:"after/S4_zone.jpg" },
-  { id:5, title:"Solution 5: เพิ่ม LED", desc:"เพิ่มไฟแสดงผล", switchImg:"after/S5_switch.jpg", zoneImg:"after/S5_zone.jpg" },
-  { id:6, title:"Solution 6: ผสมทั้งหมด", desc:"รวมหลายเทคนิค", switchImg:"after/S6_switch.jpg", zoneImg:"after/S6_zone.jpg" }
+  { id:1, title:"Solution 1: ใช้สี", desc:"ใช้สีแยกโซน", switchImg:"S1_switch.jpg", zoneImg:"S1_zone.jpg" },
+  { id:2, title:"Solution 2: Layout ตรงผัง", desc:"จัดเรียงให้ตรง", switchImg:"S2_switch.jpg", zoneImg:"S2_zone.jpg" },
+  { id:3, title:"Solution 3: เพิ่ม icon", desc:"ใช้สัญลักษณ์", switchImg:"S3_switch.jpg", zoneImg:"S3_zone.jpg" },
+  { id:4, title:"Solution 4: เพิ่มหมายเลข", desc:"ใส่ตัวเลขกำกับ", switchImg:"S4_switch.jpg", zoneImg:"S4_zone.jpg" },
+  { id:5, title:"Solution 5: เพิ่ม LED", desc:"เพิ่มไฟแสดงผล", switchImg:"S5_switch.jpg", zoneImg:"S5_zone.jpg" },
+  { id:6, title:"Solution 6: ผสมทั้งหมด", desc:"รวมหลายเทคนิค", switchImg:"S6_switch.jpg", zoneImg:"S6_zone.jpg" }
 ];
 
 function shuffleArray(array){
@@ -854,7 +855,7 @@ function loadQuestion(){
     `Solution ${sol.id} | ${currentQuestion+1}/4`;
 
   document.getElementById("questionText").innerHTML =
-    `ถ้าอยากเปิดไฟตำแหน<b>${shuffledZones[currentQuestion]}</b> ต้องกดสวิตช์ใด?`;
+    `ถ้าอยากเปิดไฟตำแหน่ง<b>${shuffledZones[currentQuestion]}</b> ต้องกดสวิตช์ใด?`;
 
   document.getElementById("imgA").src = sol.zoneImg;
   document.getElementById("imgB").src = sol.switchImg;
@@ -958,4 +959,3 @@ window.answer = answer;
   
 </body>
 </html>
-
