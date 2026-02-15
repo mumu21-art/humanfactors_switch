@@ -937,10 +937,10 @@ const zoneTextGroup1_EN = {
 
 // สำหรับ Solution 4–6
 const zoneTextGroup2 = {
-  A: "บริเวณหน้าจอโปรเจคเตอร์",
-  B: "บริเวณหน้าห้อง",
-  C: "บริเวณกลางห้อง",
-  D: "บริเวณหลังห้อง"
+  A: "projector screen area",
+  B: "front area of the room",
+  C: "middle area of the room",
+  D: "rear area of the room"
 };
 const zoneTextGroup2_EN = {
   A: "XXX area",
@@ -967,25 +967,26 @@ function loadQuestion(){
      เลือกกลุ่มคำถามตาม solution
      ===================================== */
 
-  let zoneTextTH = "";
-
   // 🔹 Solution 1–3 ใช้ Group 1
-  if(sol.id === 1 || sol.id === 2 || sol.id === 3){
+  if(sol.id <= 3){
     zoneTextTH = zoneTextGroup1[zone];
+    zoneTextEN = zoneTextGroup1_EN[zone];
   }
-
+  
   // 🔹 Solution 4–6 ใช้ Group 2
   else{
     zoneTextTH = zoneTextGroup2[zone];
+    zoneTextEN = zoneTextGroup2_EN[zone];
   }
 
   /* =====================================
      สร้างคำถาม
      ===================================== */
 
-  questionTH = `ถ้าต้องการเปิดไฟ${zoneTextTH} ต้องกดสวิตช์ใด?`;
+questionTH = `ถ้าต้องการเปิดไฟ${zoneTextTH} ต้องกดสวิตช์ใด?`;
 
-  questionEN = `(Which switch turns on the light in the ${zoneTextTH} area?)`;
+questionEN = `(Which switch turns on the light in the ${zoneTextEN} area?)`;
+
 
   document.getElementById("questionText").innerHTML =
     `Q${currentQuestion+1}: ${questionTH}
@@ -1154,5 +1155,6 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
