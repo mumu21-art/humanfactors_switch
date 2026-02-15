@@ -421,6 +421,24 @@
       box-shadow: 0 10px 16px rgba(17,24,39,.08);
       border-color: rgba(196,181,253,.65);
     }
+    /* ==============================
+   Selected State (ตอนถูกเลือก)
+   ============================== */
+.switches .btnChoice.selected {
+  /* เปลี่ยนพื้นหลังเป็นม่วงพาสเทล */
+  background: linear-gradient(
+    90deg,
+    #ede9fe 0%,   /* ม่วงอ่อนมาก */
+    #ddd6fe 100%
+  );
+
+  /* เปลี่ยนสีขอบให้เข้ากัน */
+  border-color: #c4b5fd;
+
+  /* เพิ่มเงาเล็กน้อย */
+  box-shadow: 0 8px 18px rgba(196,181,253,.35);
+}
+
     .switches .btnChoice:active{ transform: translateY(0px); }
 
     #result{
@@ -678,10 +696,10 @@
         <div class="fineprint">กรุณาเลือกให้เร็วและแม่นยำ (Please answer quickly and accurately.)</div>
 
         <div class="switches">
-          <button class="btnChoice" type="button" onclick="answer(1)">สวิตช์ที่ 1<span class="en">(Switch 1)</span></button>
-          <button class="btnChoice" type="button" onclick="answer(2)">สวิตช์ที่ 2<span class="en">(Switch 2)</span></button>
-          <button class="btnChoice" type="button" onclick="answer(3)">สวิตช์ที่ 3<span class="en">(Switch 3)</span></button>
-          <button class="btnChoice" type="button" onclick="answer(4)">สวิตช์ที่ 4<span class="en">(Switch 4)</span></button>
+          <button class="btnChoice" data-choice="1" type="button" onclick="answer(1)">สวิตช์ที่ 1<span class="en">(Switch 1)</span></button>
+          <button class="btnChoice" data-choice="2" type="button" onclick="answer(2)">สวิตช์ที่ 2<span class="en">(Switch 2)</span></button>
+          <button class="btnChoice" data-choice="3" type="button" onclick="answer(3)">สวิตช์ที่ 3<span class="en">(Switch 3)</span></button>
+          <button class="btnChoice" data-choice="4" type="button" onclick="answer(4)">สวิตช์ที่ 4<span class="en">(Switch 4)</span></button>
         </div>
       </div>
     </div>
@@ -901,6 +919,13 @@ function startSolutionTest(){
 }
 
 function loadQuestion(){
+    /* =====================================
+     รีเซ็ตสีปุ่มทุกครั้งที่โหลดข้อใหม่
+     ===================================== */
+  document.querySelectorAll(".btnChoice").forEach(btn=>{
+    btn.classList.remove("selected");
+  });
+  
   const sol = shuffledSolutions[currentSolution];
   const zone = shuffledZones[currentQuestion];
 
@@ -960,7 +985,28 @@ function answer(choice){
 
   if(isAnswering) return; // 🔥 กันกดซ้ำ
   isAnswering = true;
+  
+  /* =====================================
+     1) ลบ selected ออกจากปุ่มทั้งหมดก่อน
+     ===================================== */
+  document.querySelectorAll(".btnChoice").forEach(btn=>{
+    btn.classList.remove("selected");
+  });
 
+  /* =====================================
+     2) หาเฉพาะปุ่มที่ user กด
+     ===================================== */
+  const selectedBtn = document.querySelector(
+    `.btnChoice[data-choice="${choice}"]`
+  );
+
+  /* =====================================
+     3) ใส่ class selected ให้ปุ่มนั้น
+     ===================================== */
+  if(selectedBtn){
+    selectedBtn.classList.add("selected");
+  }
+  
   const rawTime = (Date.now() - startTime) / 1000; //เก็บเวลา
 
   afterResults.push({
@@ -1084,10 +1130,3 @@ window.answer = answer;
   
 </body>
 </html>
-
-
-   
-
-
-
-
