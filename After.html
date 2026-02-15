@@ -767,8 +767,10 @@ function backToInfo(){
 function goToInstruction(){
   section2_place.classList.remove("active");
   section3_intro.classList.add("active");
+
   afterResults = [];
   currentSolution = 0;
+  surveyStart = Date.now();   // 🔥 เพิ่มตรงนี้
   shuffledSolutions = shuffleArray(solutions);
 
   let c = 3;
@@ -845,7 +847,8 @@ function startSolutionTest(){
   section_solution_intro.classList.remove("active");
   section4_test.classList.add("active");
 
-  surveyStart = surveyStart || Date.now();
+  surveyStart = Date.now();
+  
   currentQuestion = 0;
   shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
   loadQuestion();
@@ -876,7 +879,7 @@ function answer(choice){
   if(isAnswering) return; // 🔥 กันกดซ้ำ
   isAnswering = true;
 
-  const rawTime = (Date.now() - startTime) / 1000;
+  const rawTime = (Date.now() - startTime) / 1000; //เก็บเวลา
 
   afterResults.push({
     solution: shuffledSolutions[currentSolution].id,
@@ -898,7 +901,7 @@ function answer(choice){
 
     currentSolution++;
 
-    if(currentSolution < solutions.length){
+    if(currentSolution < shuffledSolutions.length) {
 
       setTimeout(()=>{
         isAnswering = false;
@@ -1000,6 +1003,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
