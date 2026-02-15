@@ -767,6 +767,9 @@ function backToInfo(){
 function goToInstruction(){
   section2_place.classList.remove("active");
   section3_intro.classList.add("active");
+  afterResults = [];
+  currentSolution = 0;
+  shuffledSolutions = shuffleArray(solutions);
 
   let c = 3;
   const cd = document.getElementById("countdown");
@@ -819,7 +822,8 @@ function shuffleArray(array){
 /* ===============================
    STATE
 ================================ */
-
+let shuffledSolutions = [];  
+let isAnswering = false;
 let currentSolution = 0;
 let currentQuestion = 0;
 let shuffledZones = [];
@@ -832,7 +836,7 @@ let surveyStart;
 ================================ */
 
 function loadSolutionIntro(){
-  const sol = solutions[currentSolution];
+  const sol = shuffledSolutions[currentSolution];
   document.getElementById("solutionTitle").textContent = sol.title;
   document.getElementById("solutionDesc").textContent = sol.desc;
 }
@@ -849,7 +853,7 @@ function startSolutionTest(){
 }
 
 function loadQuestion(){
-  const sol = solutions[currentSolution];
+  const sol = shuffledSolutions[currentSolution];
 
   document.getElementById("progressText").textContent =
     `Solution ${sol.id} | ${currentQuestion+1}/4`;
@@ -869,10 +873,13 @@ function loadQuestion(){
 
 function answer(choice){
 
+  if(isAnswering) return; // 🔥 กันกดซ้ำ
+  isAnswering = true;
+
   const rawTime = (Date.now() - startTime) / 1000;
 
   afterResults.push({
-    solution: solutions[currentSolution].id,
+    solution: shuffledSolutions[currentSolution].id,
     zone: shuffledZones[currentQuestion],
     choice: choice,
     time: rawTime.toFixed(2)
@@ -881,19 +888,32 @@ function answer(choice){
   currentQuestion++;
 
   if(currentQuestion < 4){
-    loadQuestion();
+
+    setTimeout(()=>{
+      isAnswering = false;
+      loadQuestion();
+    },200);
+
   } else {
+
     currentSolution++;
 
     if(currentSolution < solutions.length){
-      section4_test.classList.remove("active");
-      section_solution_intro.classList.add("active");
-      loadSolutionIntro();
+
+      setTimeout(()=>{
+        isAnswering = false;
+        section4_test.classList.remove("active");
+        section_solution_intro.classList.add("active");
+        loadSolutionIntro();
+      },200);
+
     } else {
+
       finishAll();
     }
   }
 }
+
 
 /* ===============================
    FINISH
@@ -934,9 +954,10 @@ async function finishAll(){
   document.getElementById("result").innerHTML =
     "กำลังบันทึกข้อมูล...";
 
-  await fetch(GOOGLE_SHEETS_WEBAPP_URL,{
+try {
+
+  const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL,{
     method:"POST",
-    mode:"no-cors",
     headers:{
       "Content-Type":
       "application/x-www-form-urlencoded;charset=UTF-8"
@@ -946,9 +967,23 @@ async function finishAll(){
     }).toString()
   });
 
+  const resultJson = await response.json();
+
+  if(resultJson.ok){
+    document.getElementById("result").innerHTML =
+      "✅ บันทึกข้อมูลเรียบร้อย";
+  } else {
+    document.getElementById("result").innerHTML =
+      "❌ เกิดข้อผิดพลาดในการบันทึก";
+  }
+
+} catch(err){
+
   document.getElementById("result").innerHTML =
-    "✅ บันทึกข้อมูลเรียบร้อย";
+    "❌ ไม่สามารถเชื่อมต่อ Google Sheet ได้";
+
 }
+
 
 /* ===============================
    EXPORT
@@ -964,6 +999,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
