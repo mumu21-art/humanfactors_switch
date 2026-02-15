@@ -805,12 +805,54 @@ const GOOGLE_SHEETS_WEBAPP_URL =
   const zones = ["A","B","C","D"];
 
 const solutions = [
-  { id:1, title:"Solution 1: ใช้สี", desc:"ใช้สีแยกโซน", switchImg:"S1_switch.jpg", zoneImg:"S1_zone.jpg" },
-  { id:2, title:"Solution 2: Layout ตรงผัง", desc:"จัดเรียงให้ตรง", switchImg:"S2_switch.jpg", zoneImg:"S2_zone.jpg" },
-  { id:3, title:"Solution 3: เพิ่ม icon", desc:"ใช้สัญลักษณ์", switchImg:"S3_switch.jpg", zoneImg:"S3_zone.jpg" },
-  { id:4, title:"Solution 4: เพิ่มหมายเลข", desc:"ใส่ตัวเลขกำกับ", switchImg:"S4_switch.jpg", zoneImg:"S4_zone.jpg" },
-  { id:5, title:"Solution 5: เพิ่ม LED", desc:"เพิ่มไฟแสดงผล", switchImg:"S5_switch.jpg", zoneImg:"S5_zone.jpg" },
-  { id:6, title:"Solution 6: ผสมทั้งหมด", desc:"รวมหลายเทคนิค", switchImg:"S6_switch.jpg", zoneImg:"S6_zone.jpg" }
+{ 
+  id:1, 
+  title:"Solution 1: ใช้สีแยกตำแหน่งไฟ", 
+  desc:"เพิ่มผังแสดงตำแหน่งไฟและใช้สีแทนแต่ละจุด (A–D) เพื่อช่วยลดความสับสนในการกดสวิตช์", 
+  switchImg:"S1_switch.jpg", 
+  zoneImg:"S1_zone.jpg" 
+},
+
+{ 
+  id:2, 
+  title:"Solution 2: ผังตำแหน่งร่วมกับตัวอักษร", 
+  desc:"กำหนดตัวอักษร A–D แทนตำแหน่งไฟ และติดกำกับบนสวิตช์ให้ตรงกับผัง", 
+  switchImg:"S2_switch.jpg", 
+  zoneImg:"S2_zone.jpg" 
+},
+
+  { 
+  id:3, 
+  title:"Solution 3: ใช้สีร่วมกับตัวอักษร", 
+  desc:"ใช้ทั้งสีและตัวอักษรกำกับตำแหน่งไฟ เพื่อเพิ่มความชัดเจนและลด Cognitive Load", 
+  switchImg:"S3_switch.jpg", 
+  zoneImg:"S3_zone.jpg" 
+},
+  
+{ 
+  id:4, 
+  title:"Solution 4: แบ่งพื้นที่เป็นโซนตามลำดับหน้า–หลัง", 
+  desc:"จัดเรียงสวิตช์จากซ้ายไปขวาตามลำดับพื้นที่ภายในห้อง เพื่อให้สอดคล้องกับการรับรู้ตามธรรมชาติ", 
+  switchImg:"S4_switch.jpg", 
+  zoneImg:"S4_zone.jpg" 
+},
+  
+{ 
+  id:5, 
+  title:"Solution 5: โซนร่วมกับการใช้สี", 
+  desc:"แบ่งพื้นที่เป็นโซน A–D และใช้สีแทนแต่ละโซนเพื่อช่วยให้จดจำได้ง่ายขึ้น", 
+  switchImg:"S5_switch.jpg", 
+  zoneImg:"S5_zone.jpg" 
+},
+  
+{ 
+  id:6, 
+  title:"Solution 6: โซนร่วมกับตัวอักษร", 
+  desc:"แบ่งพื้นที่เป็นโซน A–D และกำหนดตัวอักษรกำกับบนสวิตช์ให้ตรงกับผัง", 
+  switchImg:"S6_switch.jpg", 
+  zoneImg:"S6_zone.jpg" 
+}
+
 ];
 
 function shuffleArray(array){
@@ -1005,6 +1047,7 @@ window.answer = answer;
   
 </body>
 </html>
+
 
 
 
