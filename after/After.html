@@ -917,6 +917,25 @@ function startSolutionTest(){
   shuffledZones = shuffleArray(zones); // 🔥 สุ่มใหม่ทุก solution
   loadQuestion();
 }
+/* =====================================
+   Mapping ข้อความคำถามตามโซน
+   ===================================== */
+
+// สำหรับ Solution 1–3
+const zoneTextGroup1 = {
+  A: "บริเวณรอบนอก",
+  B: "บริเวณรอบใน",
+  C: "บริเวณด้านหน้า",
+  D: "บริเวณด้านหลัง"
+};
+
+// สำหรับ Solution 4–6
+const zoneTextGroup2 = {
+  A: "บริเวณหน้าจอโปรเจคเตอร์",
+  B: "บริเวณหน้าห้อง",
+  C: "บริเวณกลางห้อง",
+  D: "บริเวณหลังห้อง"
+};
 
 function loadQuestion(){
     /* =====================================
@@ -932,35 +951,29 @@ function loadQuestion(){
   let questionTH = "";
   let questionEN = "";
 
-  if(sol.id === 1){
-    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on the light shown in color ${zone}?)`;
+  /* =====================================
+     เลือกกลุ่มคำถามตาม solution
+     ===================================== */
+
+  let zoneTextTH = "";
+
+  // 🔹 Solution 1–3 ใช้ Group 1
+  if(sol.id === 1 || sol.id === 2 || sol.id === 3){
+    zoneTextTH = zoneTextGroup1[zone];
   }
 
-  else if(sol.id === 2){
-    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on zone ${zone}?)`;
+  // 🔹 Solution 4–6 ใช้ Group 2
+  else{
+    zoneTextTH = zoneTextGroup2[zone];
   }
 
-  else if(sol.id === 3){
-    questionTH = `ถ้าต้องการเปิดไฟตำแหน่ง จุด <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on zone ${zone} according to the assigned color?)`;
-  }
+  /* =====================================
+     สร้างคำถาม
+     ===================================== */
 
-  else if(sol.id === 4){
-    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on zone number ${zone} from the front of the room?)`;
-  }
+  questionTH = `ถ้าต้องการเปิดไฟ${zoneTextTH} ต้องกดสวิตช์ใด?`;
 
-  else if(sol.id === 5){
-    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on zone ${zone} based on its color?)`;
-  }
-
-  else if(sol.id === 6){
-    questionTH = `ถ้าต้องการเปิดไฟโซน <b>${zone}</b> ต้องกดสวิตช์ใด?`;
-    questionEN = `(Which switch turns on zone ${zone}?)`;
-  }
+  questionEN = `(Which switch turns on the light in the ${zoneTextTH} area?)`;
 
   document.getElementById("questionText").innerHTML =
     `Q${currentQuestion+1}: ${questionTH}
@@ -974,7 +987,6 @@ function loadQuestion(){
 
   startTime = Date.now();
 }
-
 
 
 /* ===============================
@@ -1130,3 +1142,4 @@ window.answer = answer;
   
 </body>
 </html>
+
